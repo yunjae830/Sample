@@ -58,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<BoardVO> getList(Criteria cri) {
 		log.info("get List with criteria : " + cri);
-		Criteria temp = new Criteria(cri.getAmount()*(cri.getPageNum()-1),cri.getAmount());
+		Criteria temp = new Criteria(cri.getAmount()*(cri.getPageNum()-1),cri.getAmount(),cri.getType(),cri.getKeyword());
 		return mapper.getListWithPaging(temp);
 	}
 

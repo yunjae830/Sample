@@ -65,7 +65,7 @@ public class BoardMapperTests {
 	public void testSearch() {
 		
 		Criteria cri = new Criteria();
-		cri.setKeyword("»õ·Î");
+		cri.setKeyword("Test");
 		cri.setType("TC");
 		
 		List<BoardVO> list = mapper.getListWithPaging(cri);

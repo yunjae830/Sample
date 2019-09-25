@@ -6,21 +6,26 @@
     	
     	<sql id="criteria">
     		<trim prefixOverrides="OR">
-    			<foreach item='type' collection="typeArr">
-    				<trim prefix="OR">
-    					<choose>
-    						<when test="type == 'T'.toString()">
-    							title like '%'||#{keyword}||'%'
-    						</when>
-    						<when test="type == 'C'.toString()">
-    							content like '%'||#{keyword}||'%'
-    						</when>
-    						<when test="type == 'W'.toString()">
-    							writer like '%'||#{keyword}||'%'
-    						</when>
-    					</choose>
-    				</trim>
-    			</foreach>
+    			<if test="type != null">
+    				<if test="type == 'T'.toString()">
+    					AND title LIKE CONCAT('%', #{keyword},'%')
+    				</if>
+    				<if test="type == 'C'.toString()">
+    					AND content LIKE CONCAT('%', #{keyword},'%')
+    				</if>
+    				<if test="type == 'W'.toString()">
+    					AND writer LIKE CONCAT('%', #{keyword},'%')
+    				</if>
+    				<if test="type == 'TC'.toString()">
+    					AND (title LIKE CONCAT('%', #{keyword},'%') OR content LIKE CONCAT('%', #{keyword},'%'))
+    				</if>
+    				<if test="type == 'CW'.toString()">
+    					AND (content LIKE CONCAT('%', #{keyword},'%') OR writer LIKE CONCAT('%', #{keyword},'%'))
+    				</if>
+    				<if test="type == 'TCW'.toString()">
+    					AND (title LIKE CONCAT('%', #{keyword},'%') OR content LIKE CONCAT('%', #{keyword},'%') OR writer LIKE CONCAT('%', #{keyword},'%'))
+    				</if>
+    			</if>
     		</trim>
     	</sql>
     	<select id="getList" resultType="org.zerock.domain.BoardVO">
@@ -31,15 +36,16 @@
     	
     	<select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
     	<![CDATA[
-    		SELECT * FROM (SELECT * FROM tbl_board LIMIT #{pageNum} ,#{amount}) AS temp_tbl
+    		SELECT * FROM (SELECT * FROM tbl_board LIMIT #{pageNum} ,#{amount}) AS temp_tbl where bno > 0
     	]]>
-    		<!-- <include refid="criteria"></include> -->
+    		<include refid="criteria"></include>
     	</select>
     	
     	<select id="getListTotal" resultType="Integer">
-    		select count(bno) as count from tbl_board
-    		
-    		<!-- <include refid="criteria"></include> -->
+    	<![CDATA[
+    		select count(bno) as count from tbl_board where bno > 0
+    	]]>
+    		<include refid="criteria"></include>
     		
     	</select>
     	<insert id="insert">
