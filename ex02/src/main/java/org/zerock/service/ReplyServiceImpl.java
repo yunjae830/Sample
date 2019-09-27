@@ -54,12 +54,13 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public List<ReplyVO> getList(Criteria cri, Long bno) {
 		log.info("get Reply List of a Board " + bno);
-		return mapper.getListWithPaging(cri, bno);
+		Criteria temp = new Criteria(cri.getAmount()*(cri.getPageNum()-1),cri.getAmount(),cri.getType(),cri.getKeyword());
+		return mapper.getListWithPaging(temp, bno);
 	}
 
 	@Override
 	public ReplyPageDTO getListPage(Criteria cri, Long bno) {
-		
-		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(cri, bno));
+		Criteria temp = new Criteria(cri.getAmount()*(cri.getPageNum()-1),cri.getAmount(),cri.getType(),cri.getKeyword());
+		return new ReplyPageDTO(mapper.getCountByBno(bno), mapper.getListWithPaging(temp, bno));
 	}
 }
